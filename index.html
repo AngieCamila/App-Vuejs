@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="style.css" rel="stylesheet">
+        <script src="https://unpkg.com/vue@3"></script>
+        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    </head>
+    <body id="app" class="bg-green-200">
+        <div class="favorites">
+            <transition-group name="list">
+                <div class="favorite" v-for="alias in todosFavoritos" :key="alias.id">
+                    
+                    <a @click.prevent="mostrarFavorito(alias)" href="">
+                        <img v-bind:src="alias.picture.data.url" class="favorite__avatar">
+                    </a>
+                </div>
+            </transition-group>
+        </div>
+        <div class="w-full h-full bg-white rounded shadow-lg p-8 m-4 max-w-3xl md:mx-auto">
+            <h1 class="text-2xl font-semibold mb-3 text-center">Usarios de Facebook</h1>
+            <hr><br>
+            <form v-on:submit.prevent="Buscar">
+                <div class="flex rounded-md shadow-sm space-x-1">
+                    <input v-model="busqueda" type="text" class="w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:border-indigo-500" placeholder="Buscar...">   
+                    <button type="submit" value="Buscar" class="group relative w-20 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Buscar
+                    </button>
+                </div>
+            </form>
+            <br>
+            <transition>
+                <div v-if="result" class="mx-40 max-w-sm bg-indigo-200 rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex justify-end px-4 pt-4">
+                        <button v-if="estaFavorito" href="#" v-on:click.prevent="removerFavorito" class="hidden sm:inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5">
+                            <img src="images/favorito.png" alt="" class="w-10 h-10">
+                        </button>
+                        <button v-else href="#" v-on:click.prevent="addFavorito" class="hidden sm:inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5">
+                            <img src="images/nofavorito.png" alt="" class="w-10 h-10">
+                        </button>
+                    </div>
+                    <div class="flex flex-col items-center pb-10">
+                        <img class="mb-3 w-24 h-24 rounded-full shadow-lg" v-bind:src="result.picture.data.url" alt="">
+                        <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">{{result.name}}</h5>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">ID: {{result.id}}</span>
+                        <div class="flex mt-4 space-x-3 lg:mt-6">
+                            <a target="_blank" href="https://www.facebook.com/" class="inline-flex items-center py-2 px-4 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><img src="images/facebook.png" alt="" class="w-7 h-7"> Facebook</a>
+                        </div>
+                    </div>
+                </div>
+                <div v-else id="alert-border-1" class="flex p-4 mb-4 bg-blue-100 border-t-4 border-blue-500 dark:bg-blue-200" role="alert">
+                    <div class="ml-3 text-sm font-medium text-blue-700">Esperando por la busqueda</div>
+                </div>
+            </transition>
+            <div v-if="error" id="alert-border-2" class="flex p-4 mb-4 bg-red-100 border-t-4 border-red-500 dark:bg-red-200" role="alert">
+                <svg class="flex-shrink-0 w-5 h-5 text-red-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                <div class="ml-3 text-sm font-medium text-red-700">¡El usuario ingresado no existe!</div>
+            </div>
+        </div>
+        <script src="main.js"></script>
+        <script>
+            const mountedApp = app.mount('#app')
+        </script>
+    </body>
+</html>
